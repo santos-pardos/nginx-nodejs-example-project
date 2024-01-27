@@ -43,6 +43,8 @@ jobs:
           RESPONSE=$(curl -sSf $SERVICE_URL)
           if [ "$RESPONSE" == "$EXPECTED_RESPONSE" ]; then
               echo "Test Passed: Service returned expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
               exit 0
           else
               echo "Test Failed: Service response did not match expected response."
