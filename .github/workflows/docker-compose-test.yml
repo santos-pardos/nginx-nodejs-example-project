@@ -20,8 +20,35 @@ jobs:
           docker-compose -f docker-compose.yml up -d
           docker-compose -f docker-compose.yml ps
           sleep 30
-      - name: Run tests
+      # - name: Run tests
+      #   run: |
+      #     docker-compose -f docker-compose.yml run --rm nodejs sh -c "curl -sSf http://nodejs:3000"
+      # - name: Get Node.js service output
+      #   id: get_nodejs_output
+      #   run: |
+      #     NODEJS_OUTPUT=$(docker-compose -f docker-compose.yml logs nodejs)
+      #     echo "::set-output name=nodejs_output::$NODEJS_OUTPUT"
+      # - name: Validate Node.js service output
+      #   run: |
+      #     if [[ "${{ steps.get_nodejs_output.outputs.nodejs_output }}" == *"Hello, World!"* ]]; then
+      #       echo "Node.js service output is correct."
+      #     else
+      #       echo "ERROR: Node.js service output is incorrect."
+      #       exit 1
+      #     fi
+      - name: Test Node.js service with curl
         run: |
-          docker-compose -f docker-compose.yml run --rm nodejs sh -c "curl -sSf http://nodejs:3000"
+          SERVICE_URL="http://localhost:3000"
+          EXPECTED_RESPONSE="Hello, World!"
+          RESPONSE=$(curl -sSf $SERVICE_URL)
+          if [ "$RESPONSE" == "$EXPECTED_RESPONSE" ]; then
+              echo "Test Passed: Service returned expected response."
+              exit 0
+          else
+              echo "Test Failed: Service response did not match expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
+              exit 1
+          fi
       - name: Stop and remove containers
         run: docker-compose -f docker-compose.yml down
