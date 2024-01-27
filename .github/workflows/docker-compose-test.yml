@@ -1,0 +1,29 @@
+name: Docker Compose Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:latest
+        options: --privileged --entrypoint="/usr/bin/dockerd-entrypoint.sh"
+        ports:
+          - 3000:3000
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and run Docker-compose
+        run: docker-compose up -d
+
+      - name: Run tests
+        run: |
+          curl http://localhost:3000
+
+      - name: Stop and remove containers
+        run: docker-compose down
