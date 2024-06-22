@@ -19,7 +19,7 @@ jobs:
         run: |
           COMMIT_SHA=$(git rev-parse HEAD)
           COMMIT_TITLE=$(git log -1 --pretty=format:'%s' $COMMIT_SHA)
-          COMMIT_MESSAGE=$(git log -1 --pretty=format:'%b' $COMMIT_SHA)
+          COMMIT_MESSAGE=$(git log -1 --pretty=format:'%B' $COMMIT_SHA)
           COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an' $COMMIT_SHA)
           echo "commit_sha=${COMMIT_SHA}" >> $GITHUB_ENV
           echo "commit_title=${COMMIT_TITLE}" >> $GITHUB_ENV
